@@ -2,7 +2,6 @@ package com.shilapi.xcertplay.network
 
 import android.content.Context
 import android.net.ConnectivityManager
-import android.net.MacAddress
 import android.net.wifi.SoftApConfiguration
 import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiManager
@@ -262,10 +261,9 @@ class LocalOnlyHotspotManager(context: Context, private val onDiagnostic: (Strin
                         }
                         if (configuration.bandLabel == "2.4 GHz") {
                             if (Build.VERSION.SDK_INT < 30) {
-                                // Android 10 BYD firmware pins the local hotspot to 2.4 GHz
-                                // regardless of the Wi-Fi switch (extracted-firmware fact);
-                                // switching Wi-Fi off cannot help, so do not suggest it.
-                                throw IOException("LocalOnlyHotspot: this Android 10 firmware always places the local hotspot on 2.4 GHz; use the Car hotspot or Wi-Fi Direct")
+                                // Older frameworks may only supply a 2.4 GHz reservation.
+                                // Changing the station state is not a reliable band selector.
+                                throw IOException("LocalOnlyHotspot: this firmware provided a 2.4 GHz hotspot; use the Car hotspot or Wi-Fi Direct")
                             }
                             // Observed on DiLink 5.0 / Android 12: while the car's Wi-Fi
                             // client stays associated to a 2.4 GHz network, the Qualcomm
@@ -443,9 +441,11 @@ class LocalOnlyHotspotManager(context: Context, private val onDiagnostic: (Strin
         val ssid = validateSsid(configuration.SSID)
         val security = mapWifiConfigurationSecurity(configuration)
         val passphrase = validatePassphrase(security, unquote(configuration.preSharedKey))
-        val bssid = configuration.BSSID?.let {
+        val bssidBytes = configuration.BSSID?.let {
             try {
-                MacAddress.fromString(it)
+                // android.net.MacAddress was added in API 28. Android 8.1 returns
+                // the same textual BSSID through WifiConfiguration, so decode it directly.
+                parseHotspotBssid(it)
             } catch (failure: IllegalArgumentException) {
                 throw IOException("LocalOnlyHotspot reported an invalid BSSID: $it", failure)
             }
@@ -457,8 +457,8 @@ class LocalOnlyHotspotManager(context: Context, private val onDiagnostic: (Strin
             passphrase = passphrase,
             security = security,
             channel = channel,
-            bssid = bssid?.toString(),
-            bssidBytes = bssid?.toByteArray(),
+            bssid = bssidBytes?.toMacAddressString(),
+            bssidBytes = bssidBytes,
             bandLabel = readWifiConfigurationBandLabel(configuration, channel),
         )
     }

@@ -76,6 +76,8 @@ data class AirPlayConfig(
      * ahead of time over TCP, so short Wi-Fi gaps do not interrupt it.
      */
     val mainBufferedAudio: Boolean = false,
+    /** Whether the receiver has an Opus encoder for duplex voice streams; PCM is always offered. */
+    val opusMicrophone: Boolean = true,
 )
 
 /** The offer, SETUP and controls must all honor the user's audio-output setting. */

@@ -14,8 +14,8 @@ import org.robolectric.annotation.Config
 @Config(manifest = Config.NONE)
 class AudioTrackAttributesCompatibilityTest {
     @Test
-    @Config(sdk = [28])
-    fun android9UsesTheConfiguredAttributesWithoutCallingTheNewGetter() {
+    @Config(sdk = [27, 28])
+    fun legacyAndroidUsesTheConfiguredAttributesWithoutCallingTheNewGetter() {
         val attributes = AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_MEDIA).build()
         val track = buildTrack(attributes)
         try {

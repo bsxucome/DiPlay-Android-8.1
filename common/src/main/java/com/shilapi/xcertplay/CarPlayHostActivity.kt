@@ -3447,6 +3447,7 @@ class CarPlayHostActivity : ComponentActivity() {
             rightHandDrive = rightHandDrive,
             hevc = hevcEnabled,
             microphone = microphoneAvailable,
+            opusMicrophone = com.shilapi.xcertplay.media.MediaCodecCompatibility.opusMicrophoneAvailable,
             manufacturer = normalizedManufacturer(),
             model = normalizedModel(),
             oemLabel = oemLabel,

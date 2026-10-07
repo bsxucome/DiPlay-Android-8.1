@@ -1,5 +1,7 @@
 # DiPlay
 
+> **非官方 Android 8.1 兼容版，基于上游 v0.2.13。** 本仓库的 APK 最低支持 Android 8.1（API 27），不包含 Android 8.0。[下载本兼容版](https://github.com/bsxucome/DiPlay-Android-8.1/releases) · [安装说明](docs/ANDROID8_INSTALL.zh-CN.md)。有线及无线 CarPlay 仍需在目标车机和 iPhone 上实测。下方的上游版本说明针对官方 Android 9+ APK。
+
 为兼容的比亚迪安卓车机提供有线及无线 CarPlay，采用 DiAuto 风格界面。
 
 > 这些项目专注于比亚迪汽车。它们可能在其他品牌上运行，但其他品牌不在支持范围内，也没有增加支持或修复其品牌特定兼容性问题的计划。

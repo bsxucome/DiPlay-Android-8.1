@@ -1,5 +1,7 @@
 # DiPlay
 
+> **Unofficial Android 8.1 compatibility build based on upstream v0.2.13.** This repository's APK supports Android 8.1 (API 27); Android 8.0 is not covered. [Download this build](https://github.com/bsxucome/DiPlay-Android-8.1/releases) · [Compatibility notes](docs/ANDROID8_COMPAT.md). USB and wireless CarPlay still require testing on the target head unit and iPhone. The upstream release information below describes the original Android 9+ APK.
+
 **CarPlay for compatible BYD Android head units.** Wired and wireless, with the familiar DiAuto interface. Independent app: `com.shihab.diplay`.
 
 > **BYD support scope:** These projects focus on BYD cars. They may work on other brands, but other brands are unsupported and there are no plans to add support or fix brand-specific incompatibilities.

@@ -3,7 +3,9 @@ package com.shilapi.xcertplay.hud
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.pm.ApplicationInfo
+import android.content.pm.ActivityInfo
 import android.content.pm.PackageInfo
+import android.content.pm.Signature
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -44,6 +46,38 @@ class BydOptionalOutputSettingsTest {
         shadowOf(app.packageManager).installPackage(info)
         assertFalse(BydStandaloneHudOutput.available(knownApp))
         assertTrue(BydStandaloneHudOutput.diagnostics(knownApp).contains("standaloneHudAvailable=false"))
+    }
+
+    @Test @Config(sdk = [27])
+    @Suppress("DEPRECATION")
+    fun androidEightReportsLegacyReceiverMetadataWithoutEnablingUnsupportedHud() {
+        val app = RuntimeEnvironment.getApplication()
+        val info = PackageInfo().apply {
+            packageName = "com.byd.clusterdebug"
+            versionCode = 10601004
+            applicationInfo = ApplicationInfo().apply {
+                packageName = "com.byd.clusterdebug"
+                flags = ApplicationInfo.FLAG_SYSTEM
+            }
+            signatures = arrayOf(Signature(byteArrayOf(1, 2, 3)))
+            receivers = arrayOf(ActivityInfo().apply {
+                packageName = "com.byd.clusterdebug"
+                name = "com.byd.clusterdebug.BroadcastReceiverCAN"
+                enabled = true
+                exported = true
+            })
+        }
+        // PackageManager needs the owning application when looking up a receiver.
+        info.receivers!![0].applicationInfo = info.applicationInfo
+        shadowOf(app.packageManager).installPackage(info)
+
+        val report = BydStandaloneHudOutput.diagnostics(app)
+        assertFalse(BydStandaloneHudOutput.available(app))
+        assertTrue(report.contains("standaloneHudAvailable=false sdk=27"))
+        assertTrue(report.contains("version=10601004 system=true"))
+        assertTrue(report.contains("receiverEnabled=true exported=true"))
+        assertTrue(report.contains("signerSha256="))
+        assertFalse(report.contains("receiverMetadataUnavailable"))
     }
 
 }

@@ -49,7 +49,7 @@ class AppLocaleTest {
         assertEquals("zh-CN", manager.applicationLocales.toLanguageTags())
     }
 
-    @Test @Config(sdk = [28, 32])
+    @Test @Config(sdk = [27, 28, 32])
     fun olderAndroidWrapsArabicAndReturnsToSystemWithoutChangingGlobalResources() {
         val original = context.resources.configuration.locales.toLanguageTags()
         AppLocale.save(context, AppLocale.ARABIC)
@@ -96,7 +96,7 @@ class AppLocaleTest {
         assertEquals(AppLocale.TRADITIONAL_CHINESE, AppLocale.preference(context))
     }
 
-    @Test @Config(sdk = [28, 29, 30, 31, 32])
+    @Test @Config(sdk = [27, 28, 29, 30, 31, 32])
     fun traditionalChineseWrapsResourcesOnOlderAndroid() {
         AppLocale.save(context, AppLocale.TRADITIONAL_CHINESE)
         val wrapped = AppLocale.wrap(context)
@@ -104,7 +104,7 @@ class AppLocaleTest {
         assertEquals("應用程式語言", wrapped.getString(R.string.language_app_language))
     }
 
-    @Test @Config(sdk = [28, 32])
+    @Test @Config(sdk = [27, 28, 32])
     fun systemTraditionalRegionsResolveTraditionalResourcesWithoutAnOverride() {
         AppLocale.save(context, AppLocale.SYSTEM)
         for (tag in listOf("zh-TW", "zh-HK", "zh-MO", "zh-Hant")) {

@@ -7,7 +7,6 @@ import android.media.AudioFormat as AndroidAudioFormat
 import android.media.AudioManager
 import android.media.AudioTrack
 import android.media.MediaCodec
-import android.media.MediaCodecList
 import android.media.MediaFormat
 import android.os.Build
 import android.os.Handler
@@ -583,25 +582,17 @@ private class VideoDecoder(
     }
 
     private fun softwareDecoderName(mime: String): String? {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) return null
-        return MediaCodecList(MediaCodecList.REGULAR_CODECS).codecInfos.firstOrNull {
-            !it.isEncoder && it.isSoftwareOnly && mime in it.supportedTypes
-        }?.name
+        return MediaCodecCompatibility.softwareDecoderName(mime)
     }
 
     private fun createDecoder(mime: String): MediaCodec {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q &&
-            mime == MediaFormat.MIMETYPE_VIDEO_HEVC &&
-            preferSoftwareHevcDecoder
-        ) {
-            val software = MediaCodecList(MediaCodecList.REGULAR_CODECS).codecInfos.firstOrNull {
-                !it.isEncoder && it.isSoftwareOnly && mime in it.supportedTypes
-            }
+        if (mime == MediaFormat.MIMETYPE_VIDEO_HEVC && preferSoftwareHevcDecoder) {
+            val software = softwareDecoderName(mime)
             if (software != null) {
                 try {
-                    return MediaCodec.createByCodecName(software.name)
+                    return MediaCodec.createByCodecName(software)
                 } catch (error: Exception) {
-                    Log.w(TAG, "software HEVC decoder unavailable name=${software.name}", error)
+                    Log.w(TAG, "software HEVC decoder unavailable name=$software", error)
                 }
             }
         }

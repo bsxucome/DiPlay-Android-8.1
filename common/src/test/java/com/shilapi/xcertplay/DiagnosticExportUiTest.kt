@@ -2,6 +2,7 @@ package com.shilapi.xcertplay
 
 import android.content.ActivityNotFoundException
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Looper
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +23,7 @@ import org.robolectric.util.ReflectionHelpers
 import java.io.File
 
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [28], qualifiers = "en", shadows = [FileProviderPathTestShadow::class])
+@Config(sdk = [27, 28], qualifiers = "en", shadows = [FileProviderPathTestShadow::class])
 class DiagnosticExportUiTest {
     @Test fun missingPickerSavesAReportAndProvidesSelectableTextInsideDiPlay() {
         val controller = Robolectric.buildActivity(DiPlayActivity::class.java).setup()
@@ -52,12 +53,13 @@ class DiagnosticExportUiTest {
             assertTrue(file.name.endsWith(".txt"))
             assertTrue(descendants(saved.window!!.decorView).filterIsInstance<TextView>()
                 .any { it.text.contains(file.absolutePath) })
-            assertTrue(file.readText().contains("Android 9 / API 28"))
+            val platform = "Android ${Build.VERSION.RELEASE} / API ${Build.VERSION.SDK_INT}"
+            assertTrue(file.readText().contains(platform))
             saved.getButton(android.app.AlertDialog.BUTTON_POSITIVE).performClick()
             shadowOf(Looper.getMainLooper()).idle()
             val viewer = ShadowAlertDialog.getLatestAlertDialog()
             assertTrue(descendants(viewer.window!!.decorView).filterIsInstance<TextView>()
-                .any { it.isTextSelectable && it.text.contains("Android 9 / API 28") })
+                .any { it.isTextSelectable && it.text.contains(platform) })
             viewer.dismiss()
         } finally {
             controller.pause().stop().destroy()

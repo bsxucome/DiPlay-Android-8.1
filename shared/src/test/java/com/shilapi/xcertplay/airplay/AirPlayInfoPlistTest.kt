@@ -214,6 +214,35 @@ class AirPlayInfoPlistTest {
     }
 
     @Test
+    fun aReceiverWithoutAnOpusEncoderNegotiatesPcmForDuplexVoice() {
+        for (rate in listOf(44_100, 48_000)) {
+            val config = AirPlayConfig(
+                deviceName = "test", deviceId = "02:00:00:00:00:02", btMac = "02:00:00:00:00:02",
+                sourceVersion = "366.0", main = AirPlayDisplayConfig(widthPixels = 1280, heightPixels = 720),
+                entertainmentSampleRate = rate, microphone = true, opusMicrophone = false,
+            )
+            val formats = (AirPlayInfoPlist.build(config)["audioFormats"] as List<*>).map { it as Map<*, *> }
+            val pcmMono = if (rate == 48_000) 0x4154 else 0x554
+            for (kind in listOf("compatibility", "default", "telephony", "speechRecognition")) {
+                val voice = formats.single { it["type"] == 100 && it["audioType"] == kind }
+                assertEquals("PCM input for $kind at $rate", pcmMono, voice["audioInputFormats"])
+                assertEquals("No unsupported duplex Opus for $kind", 0,
+                    (voice["audioOutputFormats"] as Int) and 0x70000000)
+            }
+            val alert = formats.single { it["type"] == 100 && it["audioType"] == "alert" }
+            assertEquals(0x70000000, (alert["audioOutputFormats"] as Int) and 0x70000000)
+            val media = formats.single { it["type"] == 102 }
+            assertEquals(if (rate == 48_000) 0x800000 else 0x400000, media["audioOutputFormats"])
+
+            val noMicrophone = (AirPlayInfoPlist.build(config.copy(microphone = false))["audioFormats"] as List<*>)
+                .map { it as Map<*, *> }
+            assertTrue(noMicrophone.none { it.containsKey("audioInputFormats") })
+            assertEquals(0x70000000, (noMicrophone.single { it["audioType"] == "telephony" }
+                ["audioOutputFormats"] as Int) and 0x70000000)
+        }
+    }
+
+    @Test
     fun mainAltAndHighAudioStreamsAreDeclared() {
         val info = AirPlayInfoPlist.build(
             AirPlayConfig(

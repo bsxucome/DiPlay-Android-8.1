@@ -4,7 +4,6 @@ import android.Manifest
 import android.app.AppOpsManager
 import android.content.Context
 import android.content.pm.PackageManager
-import android.location.LocationManager
 import android.net.wifi.SupplicantState
 import android.net.wifi.WifiManager
 import android.net.wifi.p2p.WifiP2pConfig
@@ -33,7 +32,7 @@ import java.util.concurrent.atomic.AtomicReference
 /**
  * Creates a temporary Wi-Fi Direct group owner, preferring 5 GHz, that can also be joined as a legacy AP.
  *
- * Android 10+ creates a temporary group. Android 9's public overload can create or reuse a
+ * Android 10+ creates a temporary group. Android 8.1/9's public overload can create or reuse a
  * persistent system profile; [close] removes the active group without deleting saved profiles.
  */
 class WifiP2pGroupManager(
@@ -619,7 +618,7 @@ class WifiP2pGroupManager(
         }
     }
 
-    // WifiP2pGroup.getInterface is available on Android 9. An arbitrary p2p interface
+    // WifiP2pGroup.getInterface is available since API 14. An arbitrary p2p interface
     // can belong to a different group, so missing exact group identity must fail closed.
     private fun legacyGroupInterface(group: WifiP2pGroup): String? =
         runCatching { group.getInterface()?.takeIf { it.isNotBlank() } }.getOrNull()
@@ -719,9 +718,7 @@ class WifiP2pGroupManager(
         val wifi = appContext.getSystemService(WifiManager::class.java)
         val fiveGhzSupported = runCatching { wifi?.is5GHzBandSupported }.getOrNull()
         val wifiEnabled = runCatching { wifi?.isWifiEnabled }.getOrNull()
-        val locationEnabled = runCatching {
-            appContext.getSystemService(LocationManager::class.java)?.isLocationEnabled
-        }.getOrNull()
+        val locationEnabled = WifiLocationState.read(appContext)
         val required = if (Build.VERSION.SDK_INT >= 33) Manifest.permission.NEARBY_WIFI_DEVICES
             else Manifest.permission.ACCESS_FINE_LOCATION
         val granted = appContext.checkSelfPermission(required) == PackageManager.PERMISSION_GRANTED

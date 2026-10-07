@@ -50,7 +50,8 @@ object AirPlayInfoPlist {
         )
         if (!config.disableAudioOutput) {
             info["audioLatencies"] = audioLatencies()
-            info["audioFormats"] = audioFormats(config.entertainmentSampleRate, config.microphone, config.mainBufferedAudio)
+            info["audioFormats"] = audioFormats(config.entertainmentSampleRate, config.microphone,
+                config.mainBufferedAudio, config.opusMicrophone)
         }
         info["extendedFeatures"] = listOf("vocoderInfo", "enhancedRequestCarUI")
         info["displays"] = displays
@@ -122,6 +123,7 @@ object AirPlayInfoPlist {
         entertainmentRate: Int,
         microphone: Boolean,
         mainBuffered: Boolean = false,
+        opusMicrophone: Boolean = true,
     ): List<Map<String, Any?>> {
         fun format(type: Int, audioType: String, outputFormats: Int, inputFormats: Int? = null): Map<String, Any?> {
             val entry = linkedMapOf<String, Any?>(
@@ -140,16 +142,19 @@ object AirPlayInfoPlist {
         val opus = 0x70000000
         val aacLc = if (is48) 0x800000 else 0x400000
         val pcmInput = if (microphone) pcmMono else null
-        val wirelessInput = if (microphone) pcmMono or opus else null
+        // A duplex SETUP uses one audioFormat for playback and microphone capture. Without an
+        // encoder, omit Opus from both sides of these streams so the phone negotiates PCM.
+        val duplexOpus = if (!microphone || opusMicrophone) opus else 0
+        val wirelessInput = if (microphone) pcmMono or duplexOpus else null
 
         return listOf(
             format(100, "compatibility", pcm, pcmInput),
             format(101, "compatibility", pcm),
-            format(100, "default", pcm or opus, wirelessInput),
+            format(100, "default", pcm or duplexOpus, wirelessInput),
             format(100, "alert", pcm or opus),
             format(100, "media", pcm),
-            format(100, "telephony", pcmMono or opus, wirelessInput),
-            format(100, "speechRecognition", pcmMono or opus, wirelessInput),
+            format(100, "telephony", pcmMono or duplexOpus, wirelessInput),
+            format(100, "speechRecognition", pcmMono or duplexOpus, wirelessInput),
             format(101, "default", pcm or opus),
             format(102, "media", aacLc),
         ) + if (mainBuffered) {

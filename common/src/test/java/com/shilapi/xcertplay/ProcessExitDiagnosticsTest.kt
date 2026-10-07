@@ -14,10 +14,10 @@ import org.robolectric.annotation.Config
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [28])
 class ProcessExitDiagnosticsTest {
-    @Test fun androidNineDoesNotQueryTheAndroidElevenService() {
+    @Test @Config(sdk = [27, 28]) fun olderAndroidDoesNotQueryTheAndroidElevenService() {
         val context = object : ContextWrapper(RuntimeEnvironment.getApplication()) {
             override fun getSystemService(name: String): Any? {
-                if (name == Context.ACTIVITY_SERVICE) fail("API 28 must not query exit history")
+                if (name == Context.ACTIVITY_SERVICE) fail("Android 8.1/9 must not query exit history")
                 return super.getSystemService(name)
             }
         }

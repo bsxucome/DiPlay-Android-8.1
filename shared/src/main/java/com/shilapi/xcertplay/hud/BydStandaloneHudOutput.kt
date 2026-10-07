@@ -49,11 +49,20 @@ internal class BydStandaloneHudOutput private constructor(context: Context) {
             appendLine("standaloneHudAvailable=${available(context)} sdk=${Build.VERSION.SDK_INT}")
             appendLine("firmware=${Build.FINGERPRINT}")
             runCatching {
-                val info = context.packageManager.getPackageInfo(TARGET.packageName, PackageManager.GET_SIGNING_CERTIFICATES)
+                @Suppress("DEPRECATION")
+                val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+                    PackageManager.GET_SIGNING_CERTIFICATES else PackageManager.GET_SIGNATURES
+                val info = context.packageManager.getPackageInfo(TARGET.packageName, flags)
                 val receiver = context.packageManager.getReceiverInfo(TARGET, 0)
-                appendLine("receiver=${TARGET.flattenToString()} version=${info.longVersionCode} system=${(info.applicationInfo?.flags?.and(ApplicationInfo.FLAG_SYSTEM) ?: 0) != 0}")
+                @Suppress("DEPRECATION")
+                val version = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+                    info.longVersionCode else info.versionCode.toLong()
+                @Suppress("DEPRECATION")
+                val signers = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+                    info.signingInfo?.apkContentsSigners else info.signatures
+                appendLine("receiver=${TARGET.flattenToString()} version=$version system=${(info.applicationInfo?.flags?.and(ApplicationInfo.FLAG_SYSTEM) ?: 0) != 0}")
                 appendLine("receiverEnabled=${receiver.enabled} exported=${receiver.exported} permission=${receiver.permission}")
-                info.signingInfo?.apkContentsSigners?.forEach { signer ->
+                signers?.forEach { signer ->
                     appendLine("signerSha256=" + MessageDigest.getInstance("SHA-256").digest(signer.toByteArray())
                         .joinToString("") { "%02x".format(it.toInt() and 255) })
                 }

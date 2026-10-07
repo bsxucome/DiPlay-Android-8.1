@@ -14,7 +14,7 @@ import org.robolectric.annotation.Config
 import org.robolectric.util.ReflectionHelpers
 
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [29])
+@Config(sdk = [27, 29])
 class HomeCompactLayoutTest {
     @Config(qualifiers = "en-w2667dp-h1333dp")
     @Test fun fullSizeMultiWindowKeepsTheFullHome() {
