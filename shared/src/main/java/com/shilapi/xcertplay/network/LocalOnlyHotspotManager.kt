@@ -28,6 +28,7 @@ import java.util.concurrent.TimeUnit
  * the AP interface is usable. The reservation and multicast lock stay owned by this instance
  * until [close].
  */
+@RequiresApi(Build.VERSION_CODES.O)
 class LocalOnlyHotspotManager(context: Context, private val onDiagnostic: (String) -> Unit = {}) : WirelessHotspotManager {
     private val connectivityManager =
         context.applicationContext.getSystemService(ConnectivityManager::class.java)
