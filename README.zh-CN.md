@@ -1,12 +1,14 @@
 # DiPlay
 
+[中文首页（默认）](README.md) · **中文详细说明** · [English](README.en.md)
+
 > **非官方 Android 8.1 兼容版，基于上游 v0.2.15。** 本仓库 APK 最低支持 Android 8.1（API 27）；[下载本兼容版](https://github.com/bsxucome/DiPlay-Android-8.1/releases/tag/v0.2.15-android8.1) · [安装说明](docs/ANDROID8_INSTALL.zh-CN.md)。上游 v0.2.15 本身已声明支持 Android 7.1+（API 25），但旧车机仍需实测。本兼容版沿用原有签名，便于从本仓库旧版覆盖升级。
 
 为兼容的比亚迪安卓车机提供有线及无线 CarPlay，采用 DiAuto 风格界面。
 
 > 这些项目专注于比亚迪汽车。它们可能在其他品牌上运行，但其他品牌不在支持范围内，也没有增加支持或修复其品牌特定兼容性问题的计划。
 
-[上游中文网站](https://shihabal3amri.github.io/DiPlay/zh-Hans/) · [上游 0.2.15 版本](https://github.com/shihabal3amri/DiPlay/releases/tag/v0.2.15) · [完整说明](README.md) · [向上游报告问题](https://github.com/shihabal3amri/DiPlay/issues/new/choose)
+[上游中文网站](https://shihabal3amri.github.io/DiPlay/zh-Hans/) · [上游 0.2.15 版本](https://github.com/shihabal3amri/DiPlay/releases/tag/v0.2.15) · [项目首页](README.md) · [向上游报告问题](https://github.com/shihabal3amri/DiPlay/issues/new/choose)
 
 ## 0.2.15 — 公开预览版
 
@@ -16,14 +18,14 @@ Wi-Fi Direct 现支持 Android 7.1–9 的旧版建组路径，使用系统返�
 
 ### 新增与修正
 
-- **兼容与设置**：最低支持 Android 7.1，新增首次启动 DiLink 设置向导，以及“关于”中的手动更新检查。
+- **兼容与设置**：上游最低支持 Android 7.1，本兼容版最低支持 Android 8.1；新增首次启动 DiLink 设置向导，以及“关于”中的手动更新检查。
 - **界面**：新增浅色、深色和自动外观，优化横屏／竖屏紧凑布局，提供独立的语言和关于页面。默认仍为深色；CarPlay 外观单独设置。
 - **音视频**：改善音频欠载后的缓冲恢复，为主画面解码器提供帧率提示，并保留兼容回退路径。
 - **连接**：Wi-Fi Direct 新增自动 5 GHz／2.4 GHz 选项，可选择在指定 iPhone 通过蓝牙重连时打开 DiPlay。
 - **仪表与车辆**：转向卡片位置支持 1% 步进，修正旋转画布物理尺寸，新增可选小窗口导航标记布局。实验性自动跟随会重连 CarPlay。
 - **实验性功能**：车载蓝牙音频默认关闭；ADB 开机自启动修复须主动执行，效果取决于固件。
 
-[0.2.15 完整说明](docs/RELEASE-NOTES-0.2.15.md)包含贡献链接及功能限制；构建和验证信息见[验证记录](docs/VALIDATION.md)。Android 7.1–8.1 尚需实车验证，不宣称所有车型的连接、音频或 Siri 问题均已解决。可选功能请停车后测试。
+[0.2.15 完整说明](docs/RELEASE-NOTES-0.2.15.md)包含贡献链接及功能限制；构建和验证信息见[验证记录](docs/VALIDATION.md)。本兼容版在 Android 8.1 上尚需实车验证，不宣称所有车型的连接、音频或 Siri 问题均已解决。可选功能请停车后测试。
 
 ### 请提供 0.2.15 的新诊断报告
 
