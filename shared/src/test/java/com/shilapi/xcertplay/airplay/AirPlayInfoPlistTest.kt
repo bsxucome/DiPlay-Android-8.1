@@ -1,5 +1,7 @@
 package com.shilapi.xcertplay.airplay
 
+import com.shilapi.xcertplay.media.OpusEncoderSupport
+import com.shilapi.xcertplay.media.SoftwareOpusEncoder
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
@@ -7,6 +9,24 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class AirPlayInfoPlistTest {
+    @Test
+    fun bothDisplaysDeclareAutomaticAppearanceAtConnection() {
+        val config = AirPlayConfig(
+            deviceName = "test", deviceId = "02:00:00:00:00:02", btMac = "02:00:00:00:00:02",
+            sourceVersion = "366.0",
+            main = AirPlayDisplayConfig(widthPixels = 1280, heightPixels = 720),
+            cluster = AirPlayDisplayConfig(widthPixels = 960, heightPixels = 360),
+        )
+        val displays = AirPlayInfoPlist.build(config)["displays"] as List<*>
+        assertEquals(2, displays.size)
+        for (display in displays) {
+            val fields = display as Map<*, *>
+            for (key in listOf("uiAppearanceMode", "uiAppearanceSetting", "mapAppearanceMode", "mapAppearanceSetting")) {
+                assertEquals(key, 0, fields[key])
+            }
+        }
+    }
+
     @Test
     fun defaultDisplayIncludesFullViewAndSafeAreas() {
         val info = AirPlayInfoPlist.build(
@@ -211,22 +231,60 @@ class AirPlayInfoPlistTest {
             0x70004154,
             telephony(AirPlayInfoPlist.build(base.copy(microphone = true)))["audioInputFormats"],
         )
+
+        // Explicitly disabling Opus describes neither platform nor software encoding being usable.
+        val withoutOpus = AirPlayInfoPlist.build(base.copy(microphone = true, microphoneOpus = false))
+        assertEquals(0x4154, telephony(withoutOpus)["audioInputFormats"])
+        assertEquals(0x4154, defaultAudio(withoutOpus)["audioInputFormats"])
+        assertEquals(
+            0x4154,
+            (withoutOpus["audioFormats"] as List<*>)
+                .map { it as Map<*, *> }
+                .single { it["audioType"] == "speechRecognition" }["audioInputFormats"],
+        )
+        // Output is untouched: the Opus decoder exists from API 21, only the encoder is missing.
+        assertEquals(
+            telephony(AirPlayInfoPlist.build(base.copy(microphone = true)))["audioOutputFormats"],
+            telephony(withoutOpus)["audioOutputFormats"],
+        )
+        assertFalse(telephony(AirPlayInfoPlist.build(base.copy(microphoneOpus = false)))
+            .containsKey("audioInputFormats"))
     }
 
     @Test
-    fun aReceiverWithoutAnOpusEncoderNegotiatesPcmForDuplexVoice() {
+    fun bundledEncoderKeepsWirelessMicrophoneOpusWithoutAPlatformEncoder() {
+        val config = AirPlayConfig(
+            deviceName = "test", deviceId = "02:00:00:00:00:02", btMac = "02:00:00:00:00:02",
+            sourceVersion = "366.0", main = AirPlayDisplayConfig(widthPixels = 1280, heightPixels = 720),
+            microphone = true,
+            microphoneOpus = OpusEncoderSupport.isAvailable(
+                platformAvailable = { false }, software = { SoftwareOpusEncoder(48_000) },
+            ),
+        )
+        val formats = AirPlayInfoPlist.build(config)["audioFormats"] as List<*>
+        for (audioType in listOf("telephony", "speechRecognition", "default")) {
+            val format = formats.map { it as Map<*, *> }.single {
+                it["type"] == 100 && it["audioType"] == audioType
+            }
+            assertEquals(audioType, 0x70004154, format["audioInputFormats"])
+        }
+    }
+
+    @Test
+    fun aReceiverWithoutAnOpusEncoderKeepsPcmMicrophoneAtBothRates() {
         for (rate in listOf(44_100, 48_000)) {
             val config = AirPlayConfig(
                 deviceName = "test", deviceId = "02:00:00:00:00:02", btMac = "02:00:00:00:00:02",
                 sourceVersion = "366.0", main = AirPlayDisplayConfig(widthPixels = 1280, heightPixels = 720),
-                entertainmentSampleRate = rate, microphone = true, opusMicrophone = false,
+                entertainmentSampleRate = rate, microphone = true, microphoneOpus = false,
             )
             val formats = (AirPlayInfoPlist.build(config)["audioFormats"] as List<*>).map { it as Map<*, *> }
             val pcmMono = if (rate == 48_000) 0x4154 else 0x554
             for (kind in listOf("compatibility", "default", "telephony", "speechRecognition")) {
                 val voice = formats.single { it["type"] == 100 && it["audioType"] == kind }
                 assertEquals("PCM input for $kind at $rate", pcmMono, voice["audioInputFormats"])
-                assertEquals("No unsupported duplex Opus for $kind", 0,
+                // Playback Opus remains available when only microphone encoding is absent.
+                assertEquals("Playback Opus for $kind", if (kind == "compatibility") 0 else 0x70000000,
                     (voice["audioOutputFormats"] as Int) and 0x70000000)
             }
             val alert = formats.single { it["type"] == 100 && it["audioType"] == "alert" }

@@ -2,23 +2,10 @@ package com.shilapi.xcertplay.media
 
 import android.media.MediaCodecInfo
 import android.media.MediaCodecList
-import android.media.MediaFormat
 import android.os.Build
 
 /** Codec capabilities that cannot be inferred from the Android version on a vendor head unit. */
 object MediaCodecCompatibility {
-    /** Android 8/9 provide an Opus decoder, but generally no microphone encoder. */
-    val opusMicrophoneAvailable: Boolean by lazy {
-        runCatching {
-            val codecs = MediaCodecList(MediaCodecList.REGULAR_CODECS)
-            listOf(48_000, 64_000, 96_000).all { bitrate ->
-                val format = MediaFormat.createAudioFormat(MediaFormat.MIMETYPE_AUDIO_OPUS, 48_000, 1)
-                format.setInteger(MediaFormat.KEY_BIT_RATE, bitrate)
-                codecs.findEncoderForFormat(format) != null
-            }
-        }.getOrDefault(false)
-    }
-
     internal fun softwareDecoderName(mime: String): String? = runCatching {
         MediaCodecList(MediaCodecList.REGULAR_CODECS).codecInfos.firstOrNull { codec ->
             !codec.isEncoder && codec.supportedTypes.any { it.equals(mime, ignoreCase = true) } &&
