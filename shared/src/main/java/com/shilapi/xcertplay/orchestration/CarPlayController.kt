@@ -230,6 +230,17 @@ class CarPlayController(
     private val dashboardMapEpoch = AtomicInteger()
     private val playbackStatus = com.shilapi.xcertplay.media.CarPlayPlaybackStatus()
 
+    private val albumReplayLock = Any()
+    private var initialArtworkReplay: com.shilapi.xcertplay.transport.Iap2ArtworkTransfer? = null
+
+    fun nowPlayingSnapshot(): com.shilapi.xcertplay.media.CarPlayNowPlaying =
+        synchronized(playbackStatus) { playbackStatus.nowPlaying }
+
+    /** One bounded payload, never a nearest-cover guess when a reference is absent. */
+    fun matchingArtworkSnapshot(id: Int?): com.shilapi.xcertplay.transport.Iap2ArtworkTransfer? =
+        synchronized(albumReplayLock) { initialArtworkReplay?.takeIf { id != null && it.id == id } }
+
+
     /** Told when the iPhone starts or stops playing media; may run on any thread. */
     @Volatile var playbackListener: ((Boolean) -> Unit)? = null
 
@@ -326,6 +337,7 @@ class CarPlayController(
         override fun onSessionEnded(session: AirPlaySession) {
             if (activeSession === session) {
                 activeSession = null
+                synchronized(albumReplayLock) { initialArtworkReplay = null }
                 BydNavigationOutputs.endNow(preserveTurnOverlay = !closed && config.transport == CarPlayTransport.WIRELESS)
                 BydBluetoothSuspend.resume(appContext, this@CarPlayController)
                 com.shilapi.xcertplay.glance.CarPlayGlance.setConnected(false)
@@ -769,7 +781,47 @@ class CarPlayController(
         }
     }
 
+    enum class InitialAlbumRefreshResult { SENT, FAILED, CLOSED, INACTIVE_SESSION, CANCELLED, CHANNEL_UNAVAILABLE }
+
+    /** Existing metadata channel and worker; the caller owns the single-send budget. */
+    fun refreshInitialNowPlaying(
+        stillNeeded: () -> Boolean,
+        beforeSend: () -> Boolean = { true },
+        onFinished: (InitialAlbumRefreshResult) -> Unit = {},
+    ) {
+        var result = InitialAlbumRefreshResult.CANCELLED
+        run {
+            try {
+                if (closed) { result = InitialAlbumRefreshResult.CLOSED; return@run }
+                if (activeSession == null) { result = InitialAlbumRefreshResult.INACTIVE_SESSION; return@run }
+                if (!stillNeeded()) return@run
+                // The RFCOMM bootstrap is not the runtime metadata channel after wireless handoff.
+                val channel = if (config.transport == CarPlayTransport.WIRELESS) wirelessTunnelChannel else csm
+                if (channel == null) {
+                    result = InitialAlbumRefreshResult.CHANNEL_UNAVAILABLE
+                    debugLog("album recovery skipped channel=unavailable")
+                    return@run
+                }
+                if (closed) { result = InitialAlbumRefreshResult.CLOSED; return@run }
+                if (!stillNeeded() || !beforeSend()) return@run
+                // Claim only at the send boundary; preflight skips leave the budget intact.
+                result = InitialAlbumRefreshResult.FAILED
+                channel.send(com.shilapi.xcertplay.iap2.message.Iap2ControlMessages.startNowPlayingUpdates(), 250)
+                result = InitialAlbumRefreshResult.SENT
+                debugLog("album recovery subscription sent")
+            } catch (error: Exception) {
+                debugLog("album recovery subscription failed type=${error.javaClass.simpleName}")
+            } finally {
+                onFinished(result)
+            }
+        }
+    }
+
     private fun onArtworkTransfer(transfer: com.shilapi.xcertplay.transport.Iap2ArtworkTransfer) {
+        if (closed) return
+        synchronized(albumReplayLock) {
+            initialArtworkReplay = transfer.takeIf { it.bytes.size <= 1024 * 1024 }
+        }
         debugLog("iap2 artwork transfer id=0x${transfer.id.toString(16)} bytes=${transfer.bytes.size}")
         artworkListener?.invoke(transfer.id, transfer.bytes)
     }
@@ -1288,8 +1340,10 @@ class CarPlayController(
                     CarPlayVpnService.AttachResult.Started -> Unit
                     CarPlayVpnService.AttachResult.AlreadyStarted ->
                         throw IOException("Wireless AirPlay transport is already attached")
-                    is CarPlayVpnService.AttachResult.Failed ->
+                    is CarPlayVpnService.AttachResult.Failed -> {
+                        debugLog("wireless AirPlay listener attach failed detail=${service.lastAttachFailure}")
                         throw IOException(result.message)
+                    }
                 }
             }
             val listenerPort = service.boundPort() ?: wirelessAirPlayConfig.port
@@ -2538,7 +2592,7 @@ class CarPlayController(
                 false
             }
             is CarPlayVpnService.AttachResult.Failed -> {
-                debugLog("wired VPN/NCM transport attach result=failed ${result.message}")
+                debugLog("wired VPN/NCM transport attach result=failed ${result.message} detail=${service.lastAttachFailure}")
                 ncm.close()
                 onStatus(CarPlayStatus.Failed(result.message))
                 false

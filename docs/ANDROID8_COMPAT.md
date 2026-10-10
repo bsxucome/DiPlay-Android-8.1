@@ -1,5 +1,17 @@
 # Android 8.1 compatibility build
 
+## Current source: v0.2.17
+
+This branch now includes upstream `v0.2.17` (`391c90f80b4d54b2732dbbb3e51bf56910768ceb`). The mobile version is `0.2.17-android8.1`, version code 36. The API 27 minimum, native target, package name, signing configuration, earlier Android 8 fixes and fork-only updater are retained. Both foreground and new background update checks share the fork's release lookup.
+
+45 focused JVM logic tests passed for microphone policy and clocks, Wi-Fi scan recovery, older iPhone identification retries and version comparison. Related current sources were recompiled; unchanged dependencies came from existing v0.2.16 build output. This is not full Android or API 27 validation.
+
+API 27 coverage was added or extended for USB NCM recovery, charging settings, the legacy Wi-Fi autojoin switch, diagnostics, update APK export, update-banner persistence and hiding the Android 12L-only call-popup control. Storage permissions apply to Android 8.1/9; newer-only APIs and firmware options stay gated.
+
+**The v0.2.17 APK is not yet built or published.** Full CI was attempted but failed before verification because the current environment cannot resolve Gradle's download host or connect to its local daemon. The new WorkManager dependency is not cached. Release lint, signing and API 27 upgrade checks remain pending. See [the upgrade record](ANDROID8-UPGRADE-0.2.17.zh-CN.md).
+
+## Previously validated release: v0.2.16
+
 This branch includes the upstream `v0.2.16` release. Upstream declares Android 7.1 (API 25) as its minimum; this fork retains Android 8.1 (API 27) as its supported target in the mobile, common, shared and native builds. Android 8.0 (API 26) is outside this fork's scope. Both USB and wireless CarPlay remain available.
 
 The API 27 fixes include the legacy Wi-Fi Direct location preflight, local-only hotspot BSSID parsing, package signature diagnostics and a software video decoder fallback on older Android versions. Upstream v0.2.16 adds a software Opus encoder for older systems without a working platform encoder; when neither encoder is available, the receiver offers PCM microphone input. Features that require newer Android or specific BYD firmware remain conditional.

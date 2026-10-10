@@ -16,6 +16,7 @@
     <string name="settings_wifi_direct_auto_band">Авто · %1$s</string>
     <string name="settings_wifi_direct_band_note">«Авто · 5 GHz» и «Авто · 2.4 GHz» оставляют Wi-Fi Direct в этом диапазоне, а канал выбирает автомобиль. Если автомобиль не может использовать этот диапазон, подключение останавливается с сообщением, а не переходит в другой диапазон.</string>
     <string name="built_in_car_hotspot">Встроенная точка доступа автомобиля</string>
+    <string name="settings_built_in_car_hotspot_recommended">Встроенная точка доступа автомобиля (рекомендуется)</string>
     <string name="hotspot_hint_manual">Встроенная точка доступа · Держите точку доступа, Bluetooth и Wi-Fi iPhone включёнными.</string>
     <string name="hotspot_hint_local">Откройте настройки подключения, чтобы сохранить данные встроенной точки доступа.</string>
     <string name="hotspot_hint_p2p">Wi-Fi Direct · Держите переключатель Wi-Fi автомобиля, Bluetooth и Wi-Fi iPhone включёнными.</string>
@@ -28,8 +29,8 @@
     <string name="marker_up">Вверх</string>
     <string name="marker_down">Вниз</string>
     <string name="marker_centre_default">По центру · по умолчанию</string>
-    <string name="hotspot_mode_manual_desc">Используйте точку доступа автомобиля для беспроводного CarPlay. Подключаться к ней вручную на iPhone не нужно: DiPlay передаёт данные точки доступа по Bluetooth. Если доступно, выберите 5 ГГц в настройках автомобиля.</string>
-    <string name="hotspot_mode_p2p_desc">Альтернативный вариант. Требует включённого переключателя Wi-Fi автомобиля; на 2,4 ГГц возможны подтормаживания.</string>
+    <string name="hotspot_mode_manual_desc">Используйте точку доступа автомобиля для самого плавного беспроводного CarPlay. Подключаться к ней вручную на iPhone не нужно: DiPlay передаёт данные точки доступа по Bluetooth. Если доступно, выберите 5 ГГц в настройках автомобиля.</string>
+    <string name="hotspot_mode_p2p_desc">Для автомобилей без точки доступа. Требует включённого переключателя Wi-Fi автомобиля. Пока автомобиль ищет сети Wi-Fi, звук и изображение могут подтормаживать каждые несколько секунд.</string>
     <string name="hotspot_details_off">Точка доступа выключена · Включите её в настройках автомобиля.</string>
     <string name="hotspot_details_saved">Данные сохранены · Перед подключением убедитесь, что точка доступа автомобиля включена.</string>
     <string name="permission_enabled_ready">Разрешение включено · готово к использованию</string>
@@ -377,6 +378,7 @@
     <string name="usb_ch341">USB/CH341</string>
     <string name="use_a_usb_data_cable_and_the_car_s_usb_data_port_unlock_yo">Используйте кабель данных USB и порт данных USB автомобиля. Разблокируйте iPhone и разрешите CarPlay. Настройка точки доступа не нужна.</string>
     <string name="use_a_usb_data_cable_and_unlock_your_iphone_allow_trust_an">Используйте кабель данных USB и разблокируйте iPhone.\nРазрешите доверие и CarPlay, если iPhone попросит.</string>
+    <string name="iphone_usb_mode_rejected">iPhone не переключился в проводной CarPlay. Разблокируйте его и переподключите кабель. На iOS 15 и более ранних версиях обновите iOS или используйте беспроводной CarPlay.</string>
     <string name="use_hevc_leave_off_for_the_widest_head_unit_compatibility">Использовать HEVC. Отключите для максимальной совместимости с головными устройствами.</string>
     <string name="use_software_hevc_decoder">Использовать программный декодер HEVC</string>
     <string name="use_usage_content_type_routing_instead_of_stream_type">Маршрутизация по использованию/типу контента вместо типа потока</string>
@@ -595,6 +597,14 @@
     <string name="wheel_zoom_note_volume">Громкость</string>
     <string name="wheel_joystick">Джойстик CarPlay на руле</string>
     <string name="wheel_joystick_description">Кнопка медиа BYD включает и выключает джойстик для центрального экрана CarPlay, как поворотный контроллер в автомобиле. Пока он включён, колесо громкости или ⏮ ⏭ перемещают выбор, ⏯ выбирает, а кастомная кнопка возвращает назад; музыкой и громкостью эти кнопки тогда не управляют. Во время звонка кнопки работают для звонка. На некоторых автомобилях выбор перемещает и громкость на консоли.</string>
+    <string name="settings_external_controller">Внешний контроллер (экспериментально)</string>
+    <string name="settings_external_controller_description">Клавиши сопряжённой Bluetooth-клавиатуры, пульта или поворотного контроллера перемещают и подтверждают выбор в CarPlay, как поворотная ручка автомобиля. Сенсорный экран продолжает работать. Применяется сразу.</string>
+    <string name="settings_usb_connection">USB-подключение</string>
+    <string name="settings_usb_charging">Зарядка iPhone</string>
+    <string name="settings_usb_charging_normal">Обычная (2,4 А)</string>
+    <string name="settings_usb_charging_reduced">Пониженная (1,5 А)</string>
+    <string name="settings_usb_charging_low">Низкая (0,5 А)</string>
+    <string name="settings_usb_charging_description">Ток зарядки, который DiPlay разрешает iPhone по USB. Если проводной CarPlay обрывается каждые несколько секунд и iPhone сам переподключается, USB-порт автомобиля может не выдавать достаточно питания: попробуйте «Пониженная», затем «Низкая». iPhone будет заряжаться медленнее. Применяется при следующем USB-подключении.</string>
     <string name="wheel_joystick_auto_off">Джойстик выключается сам</string>
     <string name="wheel_joystick_auto_off_description">Через 15 секунд без нажатий и когда начинается маршрут кнопки снова управляют музыкой и громкостью.</string>
     <string name="wheel_joystick_on">Джойстик включён</string>
@@ -663,11 +673,15 @@
     <string name="update_check">Проверить обновления</string>
     <string name="update_checking">Проверка…</string>
     <string name="update_up_to_date">У вас последняя версия</string>
-    <string name="update_download">Скачать %1$s</string>
+    <string name="update_download">Скачать обновление</string>
     <string name="update_downloading">Скачивание · %1$d%%</string>
     <string name="update_verifying">Проверка…</string>
     <string name="update_install">Установить %1$s</string>
     <string name="update_failed">Не удалось обновить</string>
+    <string name="update_available_home">Доступно обновление</string>
+    <string name="update_saved_to">Сохранено в %1$s</string>
+    <string name="settings_background_update_checks">Проверять обновления в фоне</string>
+    <string name="settings_background_update_checks_description">Раз в сутки DiPlay проверяет GitHub на новую версию и показывает её на главном экране. Загрузка начинается только после вашего нажатия.</string>
     <string name="setup_guide">Мастер настройки</string>
     <string name="setup_guide_description">Определите версию DiLink, выберите подключение и включите функции, подходящие вашему автомобилю.</string>
     <string name="setup_step_of">ШАГ %1$d ИЗ %2$d</string>
@@ -749,4 +763,6 @@
     <string name="settings_ambient_parked_notice">Настраивайте на стоянке. Экспериментальная поддержка некоторых интерфейсов BYD; совместимость зависит от модели и прошивки. Уровень 0 означает минимум OEM, а не выключение.</string>
     <string name="settings_ambient_checking">Проверка…</string>
     <string name="settings_ambient_unavailable">Проверка без записи не пройдена: нет существующей авторизации ADB или подходящего интерфейса. Настройки не сохранены. Настройте доступ отдельно на стоянке; функция не включает ADB и не запрашивает авторизацию.</string>
+    <string name="settings_ambient_album">Цвет обложки альбома</string>
+    <string name="settings_ambient_album_description">Цвет обложки приближённо сопоставляется с доступными цветами автомобиля. Для серой, чёрной или отсутствующей обложки используются все 31 цвет; для преимущественно белой — белый или холодный белый.</string>
 </resources>

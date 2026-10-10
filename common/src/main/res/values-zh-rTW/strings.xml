@@ -15,6 +15,7 @@
     <string name="settings_wifi_direct_auto_band">自動 · %1$s</string>
     <string name="settings_wifi_direct_band_note">「自動 · 5 GHz」和「自動 · 2.4 GHz」會讓 Wi-Fi Direct 維持在該頻段，並由車機選擇頻道。如果車機無法使用該頻段，連線會停止並顯示提示，而不會切換頻段。</string>
     <string name="built_in_car_hotspot">車載熱點</string>
+    <string name="settings_built_in_car_hotspot_recommended">車載熱點（建議）</string>
     <string name="wifi_direct">Wi-Fi Direct</string>
     <string name="hotspot_hint_manual">車載熱點 · 保持車載熱點、藍牙和 iPhone 的 Wi-Fi 開啟。</string>
     <string name="hotspot_hint_local">開啟「連線設定」以儲存車載熱點資訊。</string>
@@ -27,8 +28,8 @@
     <string name="marker_up">上</string>
     <string name="marker_down">下</string>
     <string name="marker_centre_default">置中 · 預設</string>
-    <string name="hotspot_mode_manual_desc">使用車載熱點連線無線 CarPlay。無需在 iPhone 上手動加入熱點；DiPlay 會透過藍牙傳送熱點資訊。如有 5 GHz，請在車機設定中選擇。</string>
-    <string name="hotspot_mode_p2p_desc">替代方案。需要開啟車機 Wi-Fi 開關；2.4 GHz 連線可能會卡頓。</string>
+    <string name="hotspot_mode_manual_desc">使用車載熱點，無線 CarPlay 最流暢。無需在 iPhone 上手動加入熱點；DiPlay 會透過藍牙傳送熱點資訊。如有 5 GHz，請在車機設定中選擇。</string>
+    <string name="hotspot_mode_p2p_desc">適用於沒有車載熱點的車輛。需要開啟車機 Wi-Fi 開關。車機搜尋 Wi-Fi 網路時，聲音和畫面可能每隔幾秒卡頓一次。</string>
     <string name="hotspot_details_off">熱點已關閉 · 請在車機設定中開啟。</string>
     <string name="hotspot_details_saved">詳細資訊已儲存 · 連線前請確認車載熱點已開啟。</string>
     <string name="permission_enabled_ready">權限已啟用 · 可以使用</string>
@@ -388,6 +389,7 @@
     <string name="usb_ch341">USB/CH341</string>
     <string name="use_a_usb_data_cable_and_the_car_s_usb_data_port_unlock_yo">使用 USB 傳輸線連線車機的 USB 資料連線埠。解鎖 iPhone 並允許 CarPlay。無需設定熱點。</string>
     <string name="use_a_usb_data_cable_and_unlock_your_iphone_allow_trust_an">請使用 USB 傳輸線並解鎖 iPhone。\niPhone 出現提示時，允許「信任」並使用 CarPlay。</string>
+    <string name="iphone_usb_mode_rejected">iPhone 未切換到有線 CarPlay。請解鎖 iPhone 並重新插拔傳輸線。iOS 15 及更早版本請更新 iOS 或使用無線 CarPlay。</string>
     <string name="use_hevc_leave_off_for_the_widest_head_unit_compatibility">使用 HEVC。關閉後可相容更多車機。</string>
     <string name="use_software_hevc_decoder">使用 HEVC 軟體解碼器</string>
     <string name="use_usage_content_type_routing_instead_of_stream_type">使用 usage / content-type 路由取代串流類型</string>
@@ -622,6 +624,14 @@
     <string name="wheel_zoom_note_volume">音量</string>
     <string name="wheel_joystick">方向盤 CarPlay 搖桿</string>
     <string name="wheel_joystick_description">比亞迪媒體鍵可開啟或關閉用於 CarPlay 中控螢幕的搖桿，就像車上的旋鈕控制器。開啟時，音量滾輪或 ⏮ ⏭ 移動選擇，⏯ 確認，自訂按鍵返回；這些按鍵此時不再控制音樂和音量。通話時按鍵用於通話。部分車型中控台的音量也會移動選擇。</string>
+    <string name="settings_external_controller">外接控制器（實驗性）</string>
+    <string name="settings_external_controller_description">已配對的藍牙鍵盤、遙控器或旋鈕控制器的按鍵可在 CarPlay 中移動和確認選擇，就像車上的旋鈕。觸控螢幕仍可使用。立即生效。</string>
+    <string name="settings_usb_connection">USB 連線</string>
+    <string name="settings_usb_charging">iPhone 充電</string>
+    <string name="settings_usb_charging_normal">標準（2.4 A）</string>
+    <string name="settings_usb_charging_reduced">降低（1.5 A）</string>
+    <string name="settings_usb_charging_low">低（0.5 A）</string>
+    <string name="settings_usb_charging_description">DiPlay 透過 USB 允許 iPhone 使用的充電電流。如果有線 CarPlay 每隔幾秒中斷、iPhone 自行重新連線，可能是車機 USB 埠供電不足：請先試「降低」，再試「低」。iPhone 充電會變慢。下次 USB 連線時生效。</string>
     <string name="wheel_joystick_auto_off">搖桿自動關閉</string>
     <string name="wheel_joystick_auto_off_description">15 秒內無按鍵操作或開始導航時，按鍵恢復控制音樂和音量。</string>
     <string name="wheel_joystick_on">搖桿已開啟</string>
@@ -727,11 +737,15 @@
     <string name="update_check">檢查更新</string>
     <string name="update_checking">正在檢查…</string>
     <string name="update_up_to_date">已是最新版本</string>
-    <string name="update_download">下載 %1$s</string>
+    <string name="update_download">下載更新</string>
     <string name="update_downloading">正在下載 · %1$d%%</string>
     <string name="update_verifying">正在驗證…</string>
     <string name="update_install">安裝 %1$s</string>
     <string name="update_failed">更新失敗</string>
+    <string name="update_available_home">有可用更新</string>
+    <string name="update_saved_to">已儲存至 %1$s</string>
+    <string name="settings_background_update_checks">在背景檢查更新</string>
+    <string name="settings_background_update_checks_description">DiPlay 每天會在 GitHub 上檢查一次新版本，並顯示在主畫面上。未經你點擊，絕不會下載。</string>
     <string name="setup_guide">設定精靈</string>
     <string name="setup_guide_description">識別 DiLink 版本，選擇連線方式，並開啟適合你車輛的功能。</string>
     <string name="setup_step_of">第 %1$d 步，共 %2$d 步</string>
@@ -809,4 +823,6 @@
     <string name="settings_ambient_parked_notice">請停車後設定。實驗性支援部分 BYD 燈光介面，無法保證每種車型及韌體相容。0 表示原廠最低檔，不代表關燈。</string>
     <string name="settings_ambient_checking">檢查中…</string>
     <string name="settings_ambient_unavailable">唯讀檢查失敗：缺少既有 ADB 授權或支援的燈光介面。未儲存燈光設定。請停車後另行設定存取；本功能不啟用 ADB，也不請求授權。</string>
+    <string name="settings_ambient_album">跟隨專輯封面</string>
+    <string name="settings_ambient_album_description">按封面取色並近似匹配原車可用色號。灰黑或無封面時使用全部31色；大面積白色封面可使用白色或冷白。</string>
 </resources>

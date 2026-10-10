@@ -1,98 +1,39 @@
-<div align="center">
-  <img src="https://raw.githubusercontent.com/shilapi/xcertplay/refs/heads/master/asset/xcertplay_small.png" width="180" height="180" alt="xcertplay icon" />
-<h1><strong><font size="6">xcertplay</font></strong></h1>
-  <a href="README.md">English</a> | <a href="README.zh-CN.md">中文</a>
-  <p>xcertplay 是面向 Android 车机的 CarPlay 接收端项目。支持通过 CH341 I2C 桥接到 MFi 芯片，亦可通过板载 I2C 控制器直连，支持 CarPlay 有线和无线连接。</p>
-</div>
+# DiPlay
 
-## Features
+为兼容的比亚迪安卓车机提供有线及无线 CarPlay，采用 DiAuto 风格界面。
 
-- 面向 Android 和 Android Automotive OS 的 CarPlay 主机应用。
-- 支持 CH341 桥接 MFI 芯片、原生 `/dev/i2c-N` 设备连接的 MFI芯片、Remote MFI 认证（API见下）。
-- 支持 CarPlay 有线或无线连接。
-- 支持触发 CarPlay Ultra （未测试/未完成的协议栈，但是确实可以在 iPhone 上触发 CarPlay Ultra 的提示）。
-- 支持语音、导航、音乐多通道音频输出并 mapping 至 Android 的对应通道。
-- 支持动态 Activity resize ，并自动重新握手至新的分辨率。
-- 支持车机位置回传。
-- 支持 Android 9 (API 28) 。
+> 这些项目专注于比亚迪汽车。它们可能在其他品牌上运行，但其他品牌不在支持范围内，也没有增加支持或修复其品牌特定兼容性问题的计划。
 
-## 使用方法
+[下载与中文网站](https://shihabal3amri.github.io/DiPlay/zh-Hans/) · [0.2.17 版本](https://github.com/shihabal3amri/DiPlay/releases/tag/v0.2.17) · [完整说明](README.md) · [报告问题](https://github.com/shihabal3amri/DiPlay/issues/new/choose)
 
-1. 通过蓝牙将 iPhone 与车机配对。
-2. 在应用中用三指向下滑动，打开设置页面。
-3. 确认所有设置均已按需配置。
-4. 滑动到底部，选择 `Save & Reconnect`。
-5. 按照你选择的方式连接 MFi 芯片。
-6. 等待连接完成，然后开始使用。
+## 0.2.17 — 公开预览版
 
-## 当前进度
+请安装在允许 APK 安装的 Android 7.1+（API 25+）车机上；Android 7.1–8.1 尚未经实车验证。无需越狱、转接盒、账户或认证服务器。有线及无线核心连接不要求 ADB；可选车辆数据及车辆控制需要支持的固件和已授权网络 ADB。
 
-他运转👍，已在车机/手机平台测试，如果出现部分车机不适配的情况欢迎 issue （并附上你的 log ，位于 `/sdcard/Android/data/com.shilapi.xcertplay/files/logs/xcertplay.log`）
+Wi-Fi Direct 现支持 Android 7.1–9 的旧版建组路径，使用系统返回的真实凭据。首选信道依赖固件 API；Android 7.1–9 无法读回协商频率，所以请求信道在诊断中标为未经验证，系统默认为信道 0。Android 10+ 保留频率验证。也可使用车机内置热点、USB 或[现有 Wi-Fi／同一局域网](docs/EXISTING_WIFI.md)；同一局域网模式由车机和 iPhone 自行连接外部路由器，DiPlay 不替你修改默认路由。[Android 9 Wi-Fi Direct 限制](docs/ANDROID9_WIFI_DIRECT.md)说明清理及持久配置边界。
 
-转接板：[CH341-to-MFI](https://github.com/shilapi/ch341-to-mfi-chip)
+### 新增与修正
 
-正在 MFI 芯片转接板到货...
+- **有线连接**：车机传来一个损坏的 USB 网络数据块时，会话不再在出现画面后几秒断开重连。旧版 iOS 的 iPhone 会再尝试一次识别；USB 自动确认可识别 Android 10+ 和中文系统的权限提示。
+- **iPhone 充电**：新增“**设置 → 连接 → USB 连接 → iPhone 充电**”，适用于供电不足的车机 USB 口，可选降低（1.5 A）或低（0.5 A）。
+- **语音消息**：WhatsApp 等应用的语音消息会使用车机麦克风录音，声音不再含糊。
+- **Wi-Fi Direct**：设置中推荐使用车机内置热点；在已授权网络 ADB 时，Android 7.1 及以上会在 Wi-Fi Direct 期间暂停车机 Wi-Fi 搜索网络。
+- **更新提醒**：每天检查一次新版本，并在主页显示“有可用更新”；可在“关于”中关闭。
+- **车辆**：氛围灯可跟随专辑封面；隐藏比亚迪来电弹窗和外接控制器按键为实验性功能。
 
-## 工程结构
+[0.2.17 完整说明](docs/RELEASE-NOTES-0.2.17.md)包含贡献链接及功能限制；构建和验证信息见[验证记录](docs/VALIDATION.md)。Android 7.1–8.1 尚需实车验证，不宣称所有车型的连接、音频或 Siri 问题均已解决。可选功能请停车后测试。
 
-| 路径 | 用途 |
-| --- | --- |
-| `common/` | 两个目标共用的 CarPlay 宿主界面、设置、持久化和应用资源。 |
-| `mobile/` | 使用共享 CarPlay 主机界面的 Android 应用。 |
-| `automotive/` | 使用共享主机界面并支持高级音频通道映射的 Android Automotive OS 应用。 |
-| `shared/` | Car App Library 代码，以及 CH341、I2C、MFi、iPhone、iAP2、NCM、VPN、AirPlay 和媒体实现。 |
+### 请提供 0.2.17 的新诊断报告
 
-## Remote MFI 功能
+1. 更新到 **0.2.17**，复现问题并记录发生时间。开机／自动启动问题发生后，可手动打开 DiPlay 导出。
+2. 打开“**设置 → 诊断 → 保存诊断报告**”。Android 10+ 通常保存到 **Downloads/DiPlay**；Android 7.1–9 会请求存储权限并同样保存到该位置，也可点“选择保存位置”。如选择器或公共存储不可用，应用会使用专用外部或私有目录，并在确认中说明目的地。
+3. 使用确认中的**查看报告／分享**；没有分享应用时，可在报告视图中选择并复制文本。检查 `.txt` 并删除隐私信息，再附到匹配的[现有问题](https://github.com/shihabal3amri/DiPlay/issues)，或[新建问题](https://github.com/shihabal3amri/DiPlay/issues/new/choose)。报告不会自动上传，请勿公开热点密码或私有认证文件。
+4. 注明车型／车机、DiLink/Android/完整固件版本、iPhone/iOS、USB／车机热点／Wi-Fi Direct／同一局域网、相关设置、复现步骤、预期与实际结果及故障时间。
 
-Remote MFi 客户端把远程服务当作一块 MFi 芯片远程调用，抑或是采用 BAA 认证，通过远程进行认证免去了本地连接 MFI 芯片进行认证的流程。
+[从源码构建](docs/BUILD.md)：主应用请选择 `mobile` 模块。`maphost` 是地图演示应用，构建步骤和 APK 路径见说明。
 
-### 端点
+历史记录：[0.2.16](docs/RELEASE-NOTES-0.2.16.md)、[0.2.15](docs/RELEASE-NOTES-0.2.15.md)、[0.2.14](docs/RELEASE-NOTES-0.2.14.md)、[0.2.13](docs/RELEASE-NOTES-0.2.13.md)、[0.2.12](docs/RELEASE-NOTES-0.2.12.md)、[0.2.11](docs/RELEASE-NOTES-0.2.11.md)、[安装与连接](docs/INSTALL.md)。
 
-| Method | Path | 用途 | Request body | Success response | 失败 response |
-| --- | --- | --- | --- | --- | --- |
-| `GET` | `/mfi/certificate` | 获取 MFI 芯片版本、证书类型和证书内容，客户端首次调用后缓存 | 无 | 证书 JSON | `{"detail":"..."}` |
-| `POST` | `/mfi/sign` | 对 challenge 签名 | `{"challenge":"...","requestId":"..."}` | `{"signature":"..."}` | `{"detail":"..."}` |
-| `POST` | `/mfi/reset` | 请求重置远程 MFI 芯片 | `{}` | `{"detail":""}` | `{"detail":"..."}` |
+这是公开预览版，**未经 Apple 认证**。APK 使用从公开 Carlinkit 固件中提取的既有实验性配件身份，并非为 DiPlay 新签发的 MFi 身份；其中的私钥可被提取，未来 iOS 是否继续接受及其公开分发适用性尚未确定。Android 签名密钥和配件身份不进入 Git 或源代码压缩包；普通源代码/CI 构建默认不配置身份。部分车机仍可能卡顿或无法应用图标大小设置。
 
-（可选）采用标准 Bearer Authentication 进行验证。
-
-**当前仅测试了 BAA Authentication**
-
-## 环境要求
-
-- 启动 Gradle 需要 JDK 17 或更高版本；daemon 通过 Gradle toolchain 解析 Java 25。
-- Android SDK Platform 37。
-- Android 9（API 28）或更高版本。
-  在 Android 9 上不可用 Wi-Fi P2P 5 GHz 模式，应用会改用 LocalOnlyHotspot。
-- Android NDK `28.2.13676358`。
-- 硬件验证需要支持 USB Host/OTG 的 Android 设备以及 MFi 硬件。
-
-## 构建
-
-在 Windows PowerShell 中：
-
-```powershell
-$env:JAVA_HOME = "C:\Program Files\Android\Android Studio\jbr"
-.\gradlew.bat :shared:testDebugUnitTest :common:lintDebug :mobile:lintDebug :automotive:lintDebug :mobile:assembleDebug :automotive:assembleDebug
-```
-
-在 macOS 或 Linux 中：
-
-```bash
-./gradlew :shared:testDebugUnitTest :common:lintDebug :mobile:lintDebug :automotive:lintDebug :mobile:assembleDebug :automotive:assembleDebug
-```
-
-构建未签名 release APK：
-
-```powershell
-.\gradlew.bat :mobile:assembleRelease :automotive:assembleRelease
-```
-
-## 致谢
-
-感谢 [LIVI](https://github.com/f-io/LIVI) 项目为本项目提供了重要参考。
-感谢 [showcase](https://github.com/amineross/showcase) 项目为本项目的 BAA 认证提供重要参考。
-
-## 许可证
-
-本项目采用 [GNU General Public License v3.0](LICENSE) 许可。
+标准导航小组件需要支持 Android 小组件的启动器；比亚迪内置主页不接受任意小组件。悬浮地图和嵌入地图需要启用“CarPlay 仪表地图”。应用及发布网站支持英语、简体中文、繁体中文（台湾）、阿拉伯语、俄语、乌克兰语和西班牙语。应用的香港／澳门及 Hant 选择使用台湾译文，不宣称提供独立地区翻译。源代码、构建说明及许可证随版本提供。

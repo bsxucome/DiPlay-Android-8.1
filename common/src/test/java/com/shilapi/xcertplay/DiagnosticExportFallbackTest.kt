@@ -1,6 +1,7 @@
 package com.shilapi.xcertplay
 
 import android.content.ContentProvider
+import android.Manifest
 import android.content.ContentValues
 import android.content.ContextWrapper
 import android.content.pm.ProviderInfo
@@ -14,25 +15,28 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
+import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import org.robolectric.shadows.ShadowContentResolver
 import java.io.File
 import java.io.IOException
 
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [28], shadows = [FileProviderPathTestShadow::class])
+@Config(sdk = [27, 28], shadows = [FileProviderPathTestShadow::class])
 class DiagnosticExportFallbackTest {
     private val context get() = RuntimeEnvironment.getApplication()
     private val reports get() = File(context.getExternalFilesDir(null)!!, "diagnostic-reports")
     private val privateReports get() = File(context.filesDir, "diagnostic-reports")
+    private val publicReports get() = DiagnosticExportStore.publicDownloadsDirectory()
 
     @Before fun cleanReports() {
         reports.deleteRecursively()
         privateReports.deleteRecursively()
+        publicReports.deleteRecursively()
         registerReportProvider()
     }
 
-    @Test fun androidNineSavesUtf8WithoutAPickerOrStoragePermission() {
+    @Test fun legacyAndroidSavesUtf8WithoutAPickerOrStoragePermission() {
         val report = "DiPlay · تقرير\nUSB: waiting\n"
         val saved = DiagnosticExportStore.saveWithoutPicker(context, "DiPlay-test.txt", report)
         assertFalse(saved.savedInApp)
@@ -57,6 +61,51 @@ class DiagnosticExportFallbackTest {
         assertFalse(saved.savedInApp)
         assertEquals("report", reports.listFiles()!!.single().readText())
         assertEquals("report", read(saved.uri))
+    }
+
+    @Test fun publicDownloadsWriteSucceedsDirectly() {
+        val saved = DiagnosticExportStore.saveToPublicDownloads(context, "DiPlay-direct.txt", "report")
+        assertEquals("report", File(publicReports, "DiPlay-direct.txt").readText())
+        assertEquals("report", read(saved.uri))
+    }
+
+    @Test fun legacyAndroidWithStorageAccessSavesToTheVisibleDownloadsFolder() {
+        shadowOf(context).grantPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        val saved = DiagnosticExportStore.saveWithoutPicker(context, "DiPlay-test.txt", "report")
+        val file = File(publicReports, "DiPlay-test.txt")
+        assertEquals("report", file.readText())
+        assertEquals(file.absolutePath, saved.savedPath)
+        assertFalse(saved.savedInApp)
+        assertEquals("report", read(saved.uri))
+    }
+
+    @Test fun repeatedPublicExportsNeverOverwriteAnEarlierReport() {
+        shadowOf(context).grantPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        DiagnosticExportStore.saveWithoutPicker(context, "DiPlay-test.txt", "first")
+        val second = DiagnosticExportStore.saveWithoutPicker(context, "DiPlay-test.txt", "second")
+        assertEquals("first", File(publicReports, "DiPlay-test.txt").readText())
+        assertEquals("second", File(publicReports, "DiPlay-test-1.txt").readText())
+        assertEquals("second", read(second.uri))
+    }
+
+    @Test @Config(sdk = [30]) fun missingMediaStoreDownloadsUsesThePublicFolderWithoutPermission() {
+        val provider = MissingDownloadsProvider()
+        provider.attachInfo(context, ProviderInfo().apply { authority = "media" })
+        ShadowContentResolver.registerProviderInternal("media", provider)
+        val saved = DiagnosticExportStore.saveWithoutPicker(context, "DiPlay-test.txt", "report")
+        assertTrue(provider.insertAttempted)
+        assertEquals(File(publicReports, "DiPlay-test.txt").absolutePath, saved.savedPath)
+        assertEquals("report", read(saved.uri))
+    }
+
+    @Test fun storageAccessIsOnlyRequestedOnLegacyAndroid() {
+        assertTrue(DiagnosticExportStore.needsStoragePermission(context, sdkInt = 27))
+        assertTrue(DiagnosticExportStore.needsStoragePermission(context, sdkInt = 28))
+        assertFalse(DiagnosticExportStore.needsStoragePermission(context, sdkInt = 29))
+        assertFalse(DiagnosticExportStore.needsStoragePermission(context, sdkInt = 30))
+        shadowOf(context).grantPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        assertFalse(DiagnosticExportStore.needsStoragePermission(context, sdkInt = 27))
+        assertFalse(DiagnosticExportStore.needsStoragePermission(context, sdkInt = 28))
     }
 
     @Test fun anEarlierShareUriCannotReadALaterExport() {
