@@ -4,11 +4,13 @@
 
 This branch now includes upstream `v0.2.17` (`391c90f80b4d54b2732dbbb3e51bf56910768ceb`). The mobile version is `0.2.17-android8.1`, version code 36. The API 27 minimum, native target, package name, signing configuration, earlier Android 8 fixes and fork-only updater are retained. Both foreground and new background update checks share the fork's release lookup.
 
-45 focused JVM logic tests passed for microphone policy and clocks, Wi-Fi scan recovery, older iPhone identification retries and version comparison. Related current sources were recompiled; unchanged dependencies came from existing v0.2.16 build output. This is not full Android or API 27 validation.
+The full required CI command passed with Gradle 9.5.0 and JDK 25: 1,325 shared tests, 1,126 common tests and 4 Home tests, with zero failures and zero skips. Debug lint and builds passed for mobile, home and maphost. The release lint and signed APK build also passed; JavaCompile ran normally without disabling compilation tasks.
 
 API 27 coverage was added or extended for USB NCM recovery, charging settings, the legacy Wi-Fi autojoin switch, diagnostics, update APK export, update-banner persistence and hiding the Android 12L-only call-popup control. Storage permissions apply to Android 8.1/9; newer-only APIs and firmware options stay gated.
 
-**The v0.2.17 APK is not yet built or published.** Full CI was attempted but failed before verification because the current environment cannot resolve Gradle's download host or connect to its local daemon. The new WorkManager dependency is not cached. Release lint, signing and API 27 upgrade checks remain pending. See [the upgrade record](ANDROID8-UPGRADE-0.2.17.zh-CN.md).
+The signed APK has minimum API 27, version code 36 and the same certificate as v0.2.16. Its runtime authentication assets match the selected local inputs, and the Android signing keystore is absent from the APK. On an API 27 emulator it upgraded v0.2.16 while preserving the UID and first-install timestamp. Home, USB preparation, Settings, Wi-Fi Direct configuration, Chinese selection and a subsequent cold launch worked without a fatal crash or API linkage error during the checks.
+
+**The v0.2.17 APK is built locally; GitHub publication remains pending.** Browser access to GitHub is still refused by a saved website permission. Physical USB/wireless CarPlay, calls, Siri, head-unit codecs and vehicle controls need testing on the target car and iPhone. See [the upgrade record](ANDROID8-UPGRADE-0.2.17.zh-CN.md).
 
 ## Previously validated release: v0.2.16
 

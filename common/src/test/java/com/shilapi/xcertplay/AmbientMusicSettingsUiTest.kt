@@ -23,7 +23,7 @@ import org.robolectric.util.ReflectionHelpers
 import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [25, 29], qualifiers = "en", manifest = Config.NONE)
+@Config(sdk = [27, 29], qualifiers = "en", manifest = Config.NONE)
 class AmbientMusicSettingsUiTest {
     private lateinit var activity: DiPlayActivity
 

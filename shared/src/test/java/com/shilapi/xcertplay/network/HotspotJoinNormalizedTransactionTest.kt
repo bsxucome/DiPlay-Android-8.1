@@ -1,17 +1,35 @@
 package com.shilapi.xcertplay.network
 
 import android.net.wifi.SoftApConfiguration
+import android.util.AtomicFile
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import org.robolectric.annotation.Implementation
+import org.robolectric.annotation.Implements
 import java.io.File
 import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [33], manifest = Config.NONE)
+@Config(sdk = [33], manifest = Config.NONE,
+    shadows = [HotspotJoinNormalizedTransactionTest.PosixAtomicRename::class])
 class HotspotJoinNormalizedTransactionTest {
+    /** Match Android's atomic replacement; Windows File.renameTo refuses an existing target. */
+    @Implements(AtomicFile::class)
+    class PosixAtomicRename {
+        companion object {
+            @JvmStatic
+            @Implementation
+            fun rename(source: File, target: File) {
+                Files.move(source.toPath(), target.toPath(),
+                    StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING)
+            }
+        }
+    }
+
     class NormalizingWifiService(var config: SoftApConfiguration) {
         var writes = 0
         var accepted = true

@@ -4,9 +4,9 @@
 
 This unofficial fork includes upstream v0.2.17 and retains Android 8.1 (API 27) as its minimum and supported target, with USB and wireless CarPlay. The upstream feature guide below is preserved for context and does not mean this fork's APK has been built or published.
 
-Source version: `0.2.17-android8.1`, version code 36. **Full CI, release lint, signed APK build and emulator upgrade validation are pending.** The latest published compatibility APK remains [v0.2.16](https://github.com/bsxucome/DiPlay-Android-8.1/releases/tag/v0.2.16-android8.1). Both background and foreground updates use this fork's releases, retaining the original package and release-signing configuration.
+Source version: `0.2.17-android8.1`, version code 36. **Full CI, release lint, signed APK build and API 27 emulator upgrade validation passed. GitHub publication is pending.** The latest published compatibility APK remains [v0.2.16](https://github.com/bsxucome/DiPlay-Android-8.1/releases/tag/v0.2.16-android8.1). Both background and foreground updates use this fork's releases, retaining the original package and release-signing configuration.
 
-45 focused JVM logic tests passed for microphone policy and clocks, Wi-Fi scan recovery, older iPhone identification retries and version comparison. API 27 regression tests were added or expanded. The current environment cannot download dependencies or connect to the Gradle service, so these focused tests do not establish APK or vehicle compatibility. See the [upgrade record](docs/ANDROID8-UPGRADE-0.2.17.zh-CN.md) and [build/compatibility notes](docs/ANDROID8_COMPAT.md).
+All 2,455 unit tests passed without failures or skips, including API 27 regression coverage. The full CI debug builds and lint checks passed. The signed release APK upgraded v0.2.16 on Android 8.1 without changing the UID or first-install timestamp. Home, USB preparation, Settings, Wi-Fi Direct configuration and Simplified Chinese selection opened without a fatal crash or API linkage error. Physical USB/wireless CarPlay still needs vehicle testing. See the [upgrade record](docs/ANDROID8-UPGRADE-0.2.17.zh-CN.md) and [build/compatibility notes](docs/ANDROID8_COMPAT.md).
 
 ## Upstream v0.2.17 feature reference
 

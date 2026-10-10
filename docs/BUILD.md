@@ -59,6 +59,11 @@ java -version
 The output must identify Java 25.
 On Windows, use `gradlew.bat` in place of `./gradlew` in the commands below.
 
+The USB permission tests execute shell fixtures. On Windows, install Git for Windows and add its
+`usr/bin` directory to the build process's `PATH` so Java can start `sh.exe`. For a standard install,
+run `$env:PATH = 'C:/Program Files/Git/usr/bin;' + $env:PATH` in the PowerShell session before
+running Gradle. The fixtures use stdin to preserve their quoting on Windows.
+
 ## Build the main app
 
 For a source build without runtime authentication assets:

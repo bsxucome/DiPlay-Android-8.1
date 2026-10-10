@@ -28,7 +28,7 @@ import org.robolectric.annotation.LooperMode
 import org.robolectric.util.ReflectionHelpers
 
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [25, 29], qualifiers = "en", shadows = [VpnConsentTestShadow::class])
+@Config(sdk = [27, 29], qualifiers = "en", shadows = [VpnConsentTestShadow::class])
 @LooperMode(LooperMode.Mode.PAUSED)
 class CarPlayVpnConsentTest {
     private lateinit var activity: CarPlayHostActivity

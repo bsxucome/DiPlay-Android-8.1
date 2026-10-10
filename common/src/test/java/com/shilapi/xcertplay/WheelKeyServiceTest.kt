@@ -369,7 +369,7 @@ class WheelKeyServiceTest {
         assertEquals(1, siriRequests)
     }
     @Test
-    @Config(sdk = [25, 29])
+    @Config(sdk = [27, 29])
     fun guidanceChangesOnlyNavigationAndStopsNewCapturesAfterGuidance() {
         WheelZoomSettings.setEnabled(service, false)
         service.session = { "phone" }

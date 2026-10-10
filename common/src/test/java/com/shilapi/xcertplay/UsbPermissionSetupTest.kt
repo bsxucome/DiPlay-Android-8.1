@@ -20,7 +20,7 @@ import org.robolectric.shadows.ShadowAlertDialog
 import org.robolectric.shadows.ShadowSettings
 
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [29], manifest = Config.NONE, qualifiers = "en")
+@Config(sdk = [27, 29], manifest = Config.NONE, qualifiers = "en")
 class UsbPermissionSetupTest {
     private val context get() = RuntimeEnvironment.getApplication()
     private val permissions get() = UsbPermissionSetup.Permission.entries
@@ -193,9 +193,13 @@ class UsbPermissionSetupTest {
     )
 
     private fun runShell(script: String): String {
-        val process = ProcessBuilder("sh", "-c", script).redirectErrorStream(true).start()
+        // Feed the fixture through stdin: Windows shell argv parsing strips its nested quotes.
+        val process = ProcessBuilder("sh").redirectErrorStream(true).start()
+        process.outputStream.bufferedWriter().use { it.write(script); it.newLine() }
         assertTrue(process.waitFor(3, TimeUnit.SECONDS))
-        return process.inputStream.bufferedReader().readText()
+        val output = process.inputStream.bufferedReader().readText()
+        assertEquals("Shell fixture failed: $output", 0, process.exitValue())
+        return output
     }
 
     private class FakeClient : UsbPermissionSetup.Client {

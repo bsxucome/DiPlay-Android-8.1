@@ -4,7 +4,7 @@
 
 > **非官方兼容版，基于上游 v0.2.17，最低 Android 8.1（API 27）。** 有线与无线 CarPlay、旧系统 Wi-Fi 与媒体适配保留；应用内更新仅查询本兼容版仓库。下文的上游功能介绍不代表本兼容包已构建或发布。
 
-本分支源码已合入 v0.2.17，版本名为 `0.2.17-android8.1`、版本代码为 36。**v0.2.17 APK 构建、完整验证及发布尚未完成。** 当前最新已发布兼容包仍是 [v0.2.16](https://github.com/bsxucome/DiPlay-Android-8.1/releases/tag/v0.2.16-android8.1)。
+本分支源码已合入 v0.2.17，版本名为 `0.2.17-android8.1`、版本代码为 36。**签名 APK、2,455 项单测、完整 CI、release lint 和 Android 8.1 模拟器覆盖升级验证已完成；GitHub 上传尚未完成。** 当前最新已发布兼容包仍是 [v0.2.16](https://github.com/bsxucome/DiPlay-Android-8.1/releases/tag/v0.2.16-android8.1)。实车 USB／无线连接仍需测试。
 
 [本次升级与验证记录](docs/ANDROID8-UPGRADE-0.2.17.zh-CN.md) · [Android 8.1 安装说明](docs/ANDROID8_INSTALL.zh-CN.md)
 
