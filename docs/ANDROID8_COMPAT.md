@@ -10,7 +10,7 @@ API 27 coverage was added or extended for USB NCM recovery, charging settings, t
 
 The signed APK has minimum API 27, version code 36 and the same certificate as v0.2.16. Its runtime authentication assets match the selected local inputs, and the Android signing keystore is absent from the APK. On an API 27 emulator it upgraded v0.2.16 while preserving the UID and first-install timestamp. Home, USB preparation, Settings, Wi-Fi Direct configuration, Chinese selection and a subsequent cold launch worked without a fatal crash or API linkage error during the checks.
 
-**The v0.2.17 APK is built locally; GitHub publication remains pending.** Browser access to GitHub is still refused by a saved website permission. Physical USB/wireless CarPlay, calls, Siri, head-unit codecs and vehicle controls need testing on the target car and iPhone. See [the upgrade record](ANDROID8-UPGRADE-0.2.17.zh-CN.md).
+**The v0.2.17 APK, validated source archive and checksums are available from the [GitHub release](https://github.com/bsxucome/DiPlay-Android-8.1/releases/tag/v0.2.17-android8.1).** Physical USB/wireless CarPlay, calls, Siri, head-unit codecs and vehicle controls need testing on the target car and iPhone. See [the upgrade record](ANDROID8-UPGRADE-0.2.17.zh-CN.md).
 
 ## Previously validated release: v0.2.16
 

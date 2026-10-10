@@ -2,7 +2,7 @@
 
 上游标签：`v0.2.17`，提交 `391c90f80b4d54b2732dbbb3e51bf56910768ceb`。兼容分支从已发布的 v0.2.16 升级，验证日期为 2026-10-10。
 
-**本地签名 APK 和验证已完成；GitHub 上传尚未完成。** 当前线上已发布兼容包仍为 v0.2.16。
+**本地签名 APK 和验证已完成，源码及附件已同步到 GitHub。** 最新兼容包见 [v0.2.17 发布页](https://github.com/bsxucome/DiPlay-Android-8.1/releases/tag/v0.2.17-android8.1)。
 
 ## 适配范围
 
@@ -60,6 +60,6 @@ a3d45e335e1fed4343f945df36adc477c339f09109c451ed701503cce3d75484
 
 ## 仍需完成
 
-GitHub 浏览器访问被保存的网站权限设置拒绝，因此源码及发布附件尚未同步。
+源码已同步到个人仓库主分支；发布附件包括已验证标签对应的源码压缩包、签名 APK 和校验文件。GitHub 自动检查结果见[仓库 Actions](https://github.com/bsxucome/DiPlay-Android-8.1/actions)。
 
 USB／无线连接、语音消息、通话、Siri、硬件视频和比亚迪车辆功能仍需实际车机与 iPhone 验证。模拟器安装和单测通过不能证明所有车机均可完美运行。

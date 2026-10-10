@@ -2,7 +2,7 @@
 
 安装文件：`DiPlay-0.2.17-Android8.1.apk`。基于上游 v0.2.17，最低系统为 **Android 8.1（API 27）**，保留 USB 有线与无线 CarPlay。Android 8.0（API 26）无法安装本兼容包。
 
-**新版签名包已在本地生成，尚未上传 GitHub。** 线上发布页目前仍提供 v0.2.16；请核对文件名和版本，勿将前版当作新版。
+**新版签名包已发布。** 从 [v0.2.17 发布页](https://github.com/bsxucome/DiPlay-Android-8.1/releases/tag/v0.2.17-android8.1)下载 `DiPlay-0.2.17-Android8.1.apk`；发布页同时提供源码压缩包及 SHA-256 校验文件。
 
 ## 安装与覆盖升级
 
