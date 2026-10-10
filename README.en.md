@@ -2,7 +2,7 @@
 
 [简体中文（默认）](README.md) · **English** · [中文详细说明](README.zh-CN.md)
 
-> **Unofficial Android 8.1 compatibility build based on upstream v0.2.16.** This fork's APK requires Android 8.1 (API 27) or newer. The APK has been built locally; its [GitHub release is pending upload](https://github.com/bsxucome/DiPlay-Android-8.1/releases/tag/v0.2.16-android8.1). See the [compatibility notes](docs/ANDROID8_COMPAT.md). It retains this fork's signing certificate for in-place upgrades from v0.2.13–v0.2.15. Upstream's APK declares Android 7.1+ (API 25), but older head units still need vehicle testing.
+> **Unofficial Android 8.1 compatibility build based on upstream v0.2.16.** This fork's APK requires Android 8.1 (API 27) or newer. Download the APK from its [GitHub release](https://github.com/bsxucome/DiPlay-Android-8.1/releases/tag/v0.2.16-android8.1). See the [compatibility notes](docs/ANDROID8_COMPAT.md). It retains this fork's signing certificate for in-place upgrades from v0.2.13–v0.2.15. Upstream's APK declares Android 7.1+ (API 25), but older head units still need vehicle testing.
 
 **CarPlay for compatible BYD Android head units.** Wired and wireless, with the familiar DiAuto interface. Independent app: `com.shihab.diplay`.
 

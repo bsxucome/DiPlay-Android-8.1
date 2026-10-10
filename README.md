@@ -4,7 +4,7 @@
 
 > 基于[上游 DiPlay v0.2.16](https://github.com/shihabal3amri/DiPlay/releases/tag/v0.2.16) 的**非官方兼容版**。本仓库 APK 支持 Android 8.1（API 27）及以上系统，保留 USB 有线和无线 CarPlay。上游官方包已声明支持 Android 7.1（API 25）及以上；本仓库的适配与验证以 Android 8.1 为目标。
 
-v0.2.16 APK 已在本地构建，[GitHub 发布页待上传](https://github.com/bsxucome/DiPlay-Android-8.1/releases/tag/v0.2.16-android8.1)。[中文安装说明](docs/ANDROID8_INSTALL.zh-CN.md) · [兼容性说明](docs/ANDROID8_COMPAT.md)
+v0.2.16 APK 已发布，可从 [GitHub 发布页下载](https://github.com/bsxucome/DiPlay-Android-8.1/releases/tag/v0.2.16-android8.1)。[中文安装说明](docs/ANDROID8_INSTALL.zh-CN.md) · [兼容性说明](docs/ANDROID8_COMPAT.md)
 
 DiPlay 运行在兼容的比亚迪 Android 车机上，接收 iPhone 的 CarPlay 画面和音频，无需越狱、转接盒、Mac 或账号。应用界面支持简体中文和繁体中文，可在“设置 → 语言”中切换。有线与无线核心连接不要求 ADB；部分车辆数据和控制功能需要特定固件及授权的网络 ADB。其他品牌车机不在项目支持范围内。
 
@@ -12,7 +12,7 @@ DiPlay 运行在兼容的比亚迪 Android 车机上，接收 iPhone 的 CarPlay
 
 ## 安装与升级
 
-1. 获取并安装 `DiPlay-0.2.16-Android8.1.apk`。GitHub 发布页上传完成前，可使用本地工作区生成的同名文件。最低系统是 **Android 8.1（API 27）**，Android 8.0（API 26）无法安装。
+1. 从 [GitHub 发布页](https://github.com/bsxucome/DiPlay-Android-8.1/releases/tag/v0.2.16-android8.1)下载并安装 `DiPlay-0.2.16-Android8.1.apk`。最低系统是 **Android 8.1（API 27）**，Android 8.0（API 26）无法安装。
 2. 已安装**本仓库** v0.2.13～v0.2.15 兼容版的车机，可直接覆盖安装并保留应用数据。本版延续同一包名 `com.shihab.diplay` 和签名；应用内更新检查只查询本仓库的发布。
 3. 首次启动按设置向导选择连接方式并授予所需权限。无线可选车机热点、Wi-Fi Direct 或现有 Wi-Fi／同一局域网；有线连接从首页进入 USB 准备页。
 
